@@ -1,0 +1,252 @@
+%CLASSE DOCUMENTO - LINGUA E DIMENSIONE FONT
+\documentclass[corpo=11pt,english,numerazioneromana]{toptesi}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% INCLUSIONE PACCHETTI
+\usepackage[classica]{topfront}
+\usepackage[utf8]{inputenc} %utf8
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{blindtext}
+\usepackage{graphicx,wrapfig}
+\usepackage{booktabs}
+\usepackage{lmodern}
+\usepackage{varioref}
+\usepackage{url}
+\usepackage{array}
+\usepackage{paralist}{\obeyspaces\global\let =\space}
+\usepackage{verbatim}
+\usepackage{subfig}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage[pass]{geometry}
+\usepackage[figuresright]{rotating}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsmath}
+\usepackage[babel]{csquotes}
+\usepackage{hyperref}
+\usepackage[backend=biber,bibencoding=ascii]{biblatex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\hypersetup{%
+    pdfpagemode={UseOutlines},
+    bookmarksopen,
+    pdfstartview={FitH},
+    colorlinks,
+    linkcolor={black}, %COLORE DEI RIFERIMENTI AL TESTO
+    citecolor={blue}, %COLORE DEI RIFERIMENTI ALLE CITAZIONI
+    urlcolor={blue} %COLORI DEGLI URL
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% CONFIGURAZIONE LISTATI/CODICE - CANCELLARE SE NON NECESSARIO
+% PYTHON - BIANCO E NERO
+\lstset{%
+	captionpos=b,
+	language=Python,
+	basicstyle =\small\ttfamily,
+	keywordstyle=\color{black}\bfseries,
+	breaklines=true,
+	breakatwhitespace=true,
+	frame=lines,
+	numbers=left,
+	numberstyle=\footnotesize,
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% FRENCHSPACING ABILITATO - CANCELLARE PER SPAZIATURA ALL'INGLESE
+%\frenchspacing
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%DEFINIZIONE SEZIONI IN NUMERAZIONE ROMANA
+%ELENCO DEI LISTATI/CODICI
+\makeatletter
+\newcommand\listofcodes{%
+ \iffrontmatter\else\frontmattertrue\fi
+ \if@openright\cleardoublepage\else\clearpage\fi
+ % change the meaning of \chapter in a group
+ \begingroup\def\chapter##1{\@schapter}
+ \phantomsection % for the hyperlink
+ \addcontentsline{toc}{chapter}{Listings}
+ \lstlistoflistings 
+ \endgroup
+} 
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% INFORMAZIONI PDF - PERSONALIZZARE
+\pdfinfo{%
+	/Title    (Fault tolerant RISCV architecture with FreeRTOS)
+	/Author   (Elia Ribaldone)
+	/Subject  (Based on cv32e40p core of PULP project)
+	/Keywords (RISCV Fault tolerant)
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% LISTA DEI CAPITOLI DA INCLUDERE - PERSONALIZZARE
+\includeonly{%
+Introduction,%
+app_a,%
+}
+
+% FILE DI BIBLIOGRAFIA
+\addbibresource{bibliography.bib}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% INIZIO DOCUMENTO
+\begin{document}
+\english
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% FRONTESPIZIO - PERSONALIZZARE
+% ELIMINATE LE VOCI CHE NON VI SERVONO
+
+% UNIVERSITA - NOME
+\ateneo{Politecnico di Torino}
+
+% FACOLTA - DICITURA
+\FacoltaDi{Faculty of}
+% FACOLTA - NOME
+\facolta{Electonic Engeneering}
+
+% CORSO DI LAUREA - DICITURA (MANTENERE LO SPAZIO)
+\CorsoDiLaureaIn{Master degree course in }
+% CORSO DI LAUREA - NOME
+\corsodilaurea{Electronic Engeneering}
+
+% TIPOLOGIA TESI
+\TesiDiLaurea{Master Degree Thesis}
+
+% TITOLO
+\titolo{Fault tolerant RISCV architecture with FreeRTOS}
+
+% SOTTOTITOLO
+\sottotitolo{Based on cv32e40p core of PULP project}
+
+% RELATORE/I - DICITURA
+\AdvisorName{Advisors}
+% RELATORE - PROF. NOME E COGNOME
+\relatore{prof.\ Stefano Di Carlo}
+% RELATORE AGGIUNTIVO - PROF NOME E COGNOME
+% SE SI HA SOLO UN RELATORE ELIMINARE E CAMBIARE Advisors in Advisor
+\secondorelatore{prof.\ }
+
+% TUTORE AZIENDALE - TITOLO NOME E COGNOME
+%\tutoreaziendale{Ing. Pug Dog}
+% TUTORE AZIENDALE - DICITURA//AZIENDA
+%\NomeTutoreAziendale{Company tutors\\FeelGood Inc}
+
+% CANDIDATO - DICITURA (MANTENERE I DUE PUNTI)
+\CandidateName{Candidate:}
+% SECONDO CANDIDATO - ELIMINARE O DECOMMENTARE
+%secondocandidato{Bombo de Bombis}
+
+% CANDIDATO - NOME E COGNOME
+\candidato{Elia Ribaldone}
+
+% LOGO UNIVERSITA
+\logosede{logopolito}
+
+% DATA - MESE ANNO
+\sedutadilaurea{Marzo 2021}
+
+\frontespizio
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%INTERLINEA - DEFAULT 1 - NON ESAGERATE, NON SUPERATE MAI 1.3 ;)
+%\interlinea{1.2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frontmatter
+
+% DEDICA - PERSONALIZZARE
+% VSPACE - PROPORZIONE USATA PER CENTRATURA VERTICALE DEL TESTO
+% FLUSHRIGHT - ALLINEAMENTO ORIZZONTALE A DESTRA
+\vspace*{\stretch{1}}
+\begin{flushright}
+\noindent
+To my family and Anna.
+\end{flushright}
+\vspace*{\stretch{6}}
+\cleardoublepage
+
+% CITAZIONE - PERSONALIZZARE
+% VSPACE - PROPORZIONE USATA PER CENTRATURA VERTICALE DEL TESTO
+% FLUSHRIGHT - ALLINEAMENTO ORIZZONTALE A DESTRA
+\vspace*{\stretch{1}}
+\begin{flushright}
+\noindent
+citazione
+
+\textit{Huxley}
+\end{flushright}
+\vspace*{\stretch{6}}
+\cleardoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% RINGRAZIAMENTI - PERSONALIZZARE
+\ringraziamenti
+acknowledgments
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% ABSTRACT - PERSONALIZZARE
+\sommario
+Abstract
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% INDICI - ELIMINARE GLI INDICI NON NECESSARI
+
+% INDICE GENERALE
+\tableofcontents
+
+% INDICE DELLE FIGURE
+\listoffigures
+
+% INDICE DELLE TABELLE
+\listoftables
+
+% INDICE DEI CODICI
+\listofcodes
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\mainmatter
+
+% INCLUSIONE FILE CAPITOLI - PERSONALIZZARE - TENERE COERENTE CON LISTA IN ALTO
+\include{Introduction}
+
+\appendix
+% INCLUSIONE APPENDICI - - PERSONALIZZARE - TENERE COERENTE CON LISTA IN ALTO
+\include{app_a}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% BIBLIOGRAFIA
+\phantomsection
+\addcontentsline{toc}{chapter}{\refname}
+\nocite{*}
+\printbibliography
+
+\end{document}

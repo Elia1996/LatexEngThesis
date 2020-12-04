@@ -1,0 +1,15 @@
+[0] Config.pm:302> INFO - This is Biber 2.9
+[0] Config.pm:305> INFO - Logfile is 'thesis.blg'
+[22] biber:313> INFO - === Tue Oct  6, 2020, 11:46:26
+[43] Biber.pm:371> INFO - Reading 'thesis.bcf'
+[99] Biber.pm:854> INFO - Using all citekeys in bib section 0
+[114] Biber.pm:3981> INFO - Processing section 0
+[123] Biber.pm:4154> INFO - Looking for bibtex format file 'bibliography.bib' for section 0
+[124] bibtex.pm:1468> INFO - LaTeX decoding ...
+[128] bibtex.pm:1294> INFO - Found BibTeX data source 'bibliography.bib'
+[147] UCollate.pm:68> INFO - Overriding locale 'it-IT' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[147] UCollate.pm:68> INFO - Overriding locale 'it-IT' defaults 'variable = shifted' with 'variable = non-ignorable'
+[147] Biber.pm:3809> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'it-IT'
+[147] Biber.pm:3815> INFO - No sort tailoring available for locale 'it-IT'
+[154] bbl.pm:617> INFO - Writing 'thesis.bbl' with encoding 'UTF-8'
+[156] bbl.pm:720> INFO - Output to thesis.bbl
