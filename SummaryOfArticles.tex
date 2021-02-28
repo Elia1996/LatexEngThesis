@@ -1,0 +1,41 @@
+\chapter{Articles Summary}{
+	\label{chap:ArticleSummary}
+	\section{A Co-Design Approach for Fault-Tolerant Loop Execution on Coarse-Grained Reconfigurable Arrays }{
+		Article: \cite{FT_adaptive_loop_execution}
+		
+		Anno: 2015
+		
+		This article create a hardware/software co-design configurable on reliability of application and on real time SER (Soft error rate). The techniques used are Coarse-Grained Reconfigurable
+		Arrays (CGRAs), DMR and TMR.
+	}
+	\section{A dependence graph-based approach to the design of algorithm-based fault tolerant systems}{
+		Article: \cite{ABFT_method_graph_based}
+		
+		Anno: 1990		
+		
+		This article propose a two stage ABFT (Algorithm-based fault tolerance) system for computation intensive applications\cite{ABFT_method_graph_based} ABFT is a method invented in 1984 in this article "Algorithm-Based Fault Tolerance for Matrix Operations" \cite{ABFT_method}, the basic method encode data at high level and then the algorithm work on this data producing an encoded output. The computation is distributed along many unit to enhance fault tolerance, the method was first applied to matrix operation which are the basis of many intensive calculation. ABFT method can detect and correct errors in many matrix operation, to do this many processors are needed \cite{ABFT_method} . ABFT is a low cost CED (Concurrent error detection) scheme and fault location scheme \cite{ABFT_method_graph_based}.
+		ABFT is applied to: Multiplication, triangularization, fft, sorting, mesh array and hypercubes (in a hypercube processor each processor is the corner of a cube and can communicate only with n other corner).
+		This paper present a method to synthesize ABFT system based on graph-theoretic model and the use of dependence graph. The basic idea of the graph theoretic model is to use a checksum in the matrix for each processor, at the end of the computation the results are compared and a fault processor can be found. 
+	}
+	\section{A Methodology for Alleviating the Performance Degradation of TMR Solutions}{
+		Article: \cite{Alleviate_TMR_preformance_degradation}
+		
+		Anno: 2010
+		
+		Reliability degradation has increasing importance in faster and complex architecture due to sub 65nm technologies. In FPGAs the faults are more dangerous since can change design not just user data. TMR introduced by Xilinx ensures fault masking but increase chip area and power consumption, there is also a delay degradation due to redundancy that is catastrophic for critical application. This paper provide a method with reasonable balance between fault masking (F.M.) and performance/power overhead. Recent works use TMR in most sensitive subcircuits.   
+		In this letter, we introduce a software supported frame-work that provides a trade-off between the desired level of fault masking and the performance/power degradation due to hardware redundancy. This is done by removing TMR from non sensitive subcircuits. The methods consist in the application of TMR to all processor, then the core is P\&R (Place and route) to FPGA and finally the temperature distribution is analyzed. Since temperature distribution give guidelines about where it is most likely faults to occur!! since the failure probability for a device region increases with temperature. So it is possible to eliminate redundancy from parts of the design that operate under low temperatures without affecting practically fault masking.Given the affordable level of errors for a design, our methodology guarantees to find the maximum redundancy that can be selectively removed from noncritical for failure regions of the device.
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.4]{./images/Articles_image/Alleviate_TMR_performance_degradation_1.png}
+			\caption{Different fault masking exploration}
+			\label{Interface}
+		\end{figure}
+	}
+	\section{An Analytical Approach for Soft Error Rate Estimation in Digital Circuits}{
+		Article: \cite{SER_estimation_analytical}
+		
+		Anno: 2005
+		
+		Soft error or transient errors are	
+	}
+}
