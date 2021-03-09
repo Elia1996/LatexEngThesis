@@ -34,6 +34,8 @@
 \usepackage[babel]{csquotes}
 \usepackage{hyperref}
 \usepackage[backend=biber,bibencoding=ascii]{biblatex}
+\addbibresource{biblatex-examples.bib}
+\usepackage[export]{adjustbox}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -101,11 +103,7 @@
 % LISTA DEI CAPITOLI DA INCLUDERE - PERSONALIZZARE
 \includeonly{%
 Introduction,%
-FaultTolerance,%
-BasicArchitecture,%
-FaultToleranceArchitecture,%
-EnvironmentAndPrograms,%
-Simulation,%
+TechnicalBackgroundAndStateOfArt,%
 Conclusion,%
 FutureWorks,%
 app_a,%
@@ -120,6 +118,7 @@ SummaryOfArticles,%
 % INIZIO DOCUMENTO
 \begin{document}
 \english
+\raggedbottom
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -203,7 +202,7 @@ To my family and Anna.
 \vspace*{\stretch{1}}
 \begin{flushright}
 \noindent
-Passion is the most powerful weapon.
+
 \end{flushright}
 \vspace*{\stretch{6}}
 \cleardoublepage
@@ -263,13 +262,11 @@ In the design of architecture we use a FT technique that is able to detect and c
 
 % INCLUSIONE FILE CAPITOLI - PERSONALIZZARE - TENERE COERENTE CON LISTA IN ALTO
 \include{Introduction}
-\include{FaultTolerance}
-\include{BasicArchitecture}
-\include{FaultTolerantArchitecture}
-\include{EnvironmentAndPrograms}
-\include{Simulation}
+\include{TechnicalBackgroundAndStateOfArt}
+%\include{CV32E40PCore}
+%\include{CV32E40PFaultToleranceSimulationEnvironment}
+%$\include{FaultToleranceIFStageForCV32E40PCore}
 \include{Conclusion}
-\include{FutureWorks}
 \include{SummaryOfArticles}
 
 \appendix
