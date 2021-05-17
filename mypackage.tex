@@ -1,0 +1,79 @@
+\definecolor{titlebgdark}{RGB}{0,163,243}
+\definecolor{titlebglight}{RGB}{191,233,251}
+
+% change of figure caption
+\DeclareCaptionFont{myblue}{\color{blue2}}
+\captionsetup{font={myblue,bf, footnotesize},labelfont={it}}
+
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}
+{}
+{-120pt}
+{%
+	\begin{tcolorbox}[
+		enhanced,
+		colback=red2,
+		boxrule=0cm,
+		colframe=redl2,
+		arc=0pt,
+		outer arc=0pt,
+		leftrule=0pt,
+		rightrule=0pt,
+		fontupper=\color{white}\huge,
+		enlarge left by=-1in-\hoffset-\oddsidemargin, 
+		width=\textwidth+1in+\hoffset+\oddsidemargin, 
+		left=2in+\hoffset+\oddsidemargin, 
+		right=\paperwidth-1in-\hoffset-\oddsidemargin-\textwidth,
+		top=0.2cm, 
+		bottom=0.25cm,
+		overlay={
+			\node[
+			fill=red2,
+			draw=red2,
+			line width=0.15cm,
+			inner sep=0pt,
+			text width=1.1cm,
+			minimum height=1cm,
+			align=center,
+			font=\color{white}\bfseries\fontsize{30}{36}\selectfont
+			] 
+			(chapname)
+			at ([xshift=-14cm,yshift=-0.6cm]frame.north east)
+			{\thechapter};
+			\node[font=\small\color{black},anchor=south,inner sep=2pt] at (chapname.north)
+			{\MakeUppercase\chaptertitlename};  % if using amsbook, this should be \chaptername
+		} 
+		]
+		#1
+	\end{tcolorbox}%
+}
+
+\titleformat{name=\chapter,numberless}
+	{\normalfont\huge\bfseries\color{black}}{#1}{1em}{}
+
+
+\titleformat{\section} {\normalfont\LARGE\bfseries\color{red2}}{\thesection}{1em}{#1}
+\titleformat{\subsection} {\normalfont\Large\bfseries\color{blue2}}{\thesubsection}{1em}{#1}
+\titleformat{\subsubsection}{\normalfont\large\bfseries\color{gray2}}{ }{1em}{\thesubsubsection \quad #1}
+\titleformat{\paragraph}[display]{\normalfont\normalsize\bfseries}{\theparagraph .}{1em}{#1}
+\titleformat{\subparagraph}[runin]{\normalfont\normalsize\bfseries}{\thesubparagraph}{1em}{#1}
+
+
+
+\newsavebox\curwrapfig
+\makeatletter
+\long\def\wrapfiguresafe#1#2#3{%
+	\sbox\curwrapfig{#3}%
+	\par\penalty-100%
+	\begingroup % preserve \dimen@
+	\dimen@\pagegoal \advance\dimen@-\pagetotal % space left
+	\advance\dimen@-\baselineskip % allow an extra line
+	\ifdim \ht\curwrapfig>\dimen@ % not enough space left
+	\break%
+	\fi%
+	\endgroup%
+	\begin{wrapfigure}{#1}{#2}%
+		\usebox\curwrapfig%
+	\end{wrapfigure}%
+}
+\makeatother

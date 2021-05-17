@@ -4,10 +4,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % INCLUSIONE PACCHETTI
+
 \usepackage[classica]{topfront}
 \usepackage[utf8]{inputenc} %utf8
 \usepackage[english]{babel}
 \usepackage[T1]{fontenc}
+\usepackage{tgtermes}
+\usepackage{graphicx}
+\usepackage[svgnames]{xcolor}
 \usepackage{blindtext}
 \usepackage{graphicx,wrapfig}
 \usepackage{booktabs}
@@ -19,12 +23,13 @@
 \usepackage{verbatim}
 \usepackage{subfig}
 \usepackage{tabularx}
-\usepackage{amsmath}
+%\usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{float}
 \usepackage{amssymb}
 \usepackage{multicol}
 \usepackage{multirow}
+\usepackage{xcolor}
 \usepackage{listings}
 \usepackage[pass]{geometry}
 \usepackage[figuresright]{rotating}
@@ -32,22 +37,76 @@
 \usepackage{algorithmic}
 \usepackage{amsmath}
 \usepackage[babel]{csquotes}
-\usepackage{hyperref}
-\usepackage[backend=biber,bibencoding=ascii]{biblatex}
-\addbibresource{biblatex-examples.bib}
-\usepackage[export]{adjustbox}
+\usepackage[backend=biber,bibencoding=ascii, citestyle=ieee]{biblatex}
+\setcounter{tocdepth}{2}
+\usepackage{caption}
+\usepackage[explicit]{titlesec}
+\usepackage[many]{tcolorbox}
+\usepackage{lipsum}  
+\usepackage{wrapfig}
+\usepackage{parcolumns}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Code style
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.81, 0.87, 0.89}
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+%"mystyle" code listing set
+\lstset{style=mystyle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% cambiare colore delle citazioni
+\usepackage{hyperref}
+
+% color definition
+\definecolor{blue2}{HTML}{0097a5}   %{0,0.5898,0.6645}3CAAB4
+\definecolor{bluel2}{HTML}{3CAAB4}
+\definecolor{bluell2}{HTML}{C6E5EE}
+\definecolor{bluelll2}{HTML}{C5E5ED}
+\definecolor{red2}{HTML}{ED1D24} 
+\definecolor{redl2}{HTML}{E90727} 
+\definecolor{redll2}{HTML}{F1A5A8}
+\definecolor{redlll2}{HTML}{F8D2D4}
+\definecolor{gray2}{HTML}{79858d}
+
+  
+% estensione riferimenti a figura
+\newcommand{\formularef}[1]{\textbf{\textcolor{blue2}{ \textcolor{blue2}{\vref{#1}}}}}
+\newcommand{\figref}[1]{\textbf{\textcolor{blue2}{Figure \textcolor{blue2}{\vref{#1}}}}}
+\newcommand{\bscite}[1]{\textcolor{black}{\supercite{#1}}}
+
+\include{mypackage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \hypersetup{%
-    pdfpagemode={UseOutlines},
-    bookmarksopen,
-    pdfstartview={FitH},
-    colorlinks,
-    linkcolor={black}, %COLORE DEI RIFERIMENTI AL TESTO
-    citecolor={blue}, %COLORE DEI RIFERIMENTI ALLE CITAZIONI
-    urlcolor={blue} %COLORI DEGLI URL
+	pdfpagemode={UseOutlines},
+	bookmarksopen,
+	pdfstartview={FitH},
+	colorlinks,
+	linkcolor={blue2}, %COLORE DEI RIFERIMENTI AL TESTO
+	citecolor={black}, %COLORE DEI RIFERIMENTI ALLE CITAZIONI
+	urlcolor={blue2} %COLORI DEGLI URL
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -77,16 +136,18 @@
 %ELENCO DEI LISTATI/CODICI
 \makeatletter
 \newcommand\listofcodes{%
- \iffrontmatter\else\frontmattertrue\fi
- \if@openright\cleardoublepage\else\clearpage\fi
- % change the meaning of \chapter in a group
- \begingroup\def\chapter##1{\@schapter}
- \phantomsection % for the hyperlink
- \addcontentsline{toc}{chapter}{Listings}
- \lstlistoflistings 
- \endgroup
+	\iffrontmatter\else\frontmattertrue\fi
+	\if@openright\cleardoublepage\else\clearpage\fi
+	% change the meaning of \chapter in a group
+	\begingroup\def\chapter##1{\@schapter}
+	\phantomsection % for the hyperlink
+	\addcontentsline{toc}{chapter}{Listings}
+	\lstlistoflistings 
+	\endgroup
 } 
 \makeatother
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -104,17 +165,17 @@
 \includeonly{%
 Introduction,%
 TechnicalBackgroundAndStateOfArt,%
+TravulogMetalanguageForSVTransformation,%
 Conclusion,%
 FutureWorks,%
-app_a,%
-SummaryOfArticles,%
+app_a,% SummaryOfArticles,%
 }
 
 % FILE DI BIBLIOGRAFIA
 \addbibresource{bibliography.bib}
+\usepackage[export]{adjustbox}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % INIZIO DOCUMENTO
 \begin{document}
 \english
@@ -142,7 +203,9 @@ SummaryOfArticles,%
 \TesiDiLaurea{Master Degree Thesis}
 
 % TITOLO
-\titolo{Configurable fault tolerant Instruction Fetch stage for cv32e40p core}
+%\titolo{Creation of a new metalanguage for applying transformations to SystemVerilog architectures applied to the IF Stage of cv32e40p core to create a fault-tolerant architecture. }
+\title{Configurable and fault tolerant Instruction Fetch for the cv32e40p core, created through a new metalanguage that allows the application of transformations to architectures described in systemverilog}
+%\titolo{Configurable Fault Folerant Instruction Fetch stage for cv32e40p core}
 
 % SOTTOTITOLO
 \sottotitolo{Based on cv32e40p core of OpenHW Group organization}
@@ -150,10 +213,10 @@ SummaryOfArticles,%
 % RELATORE/I - DICITURA
 \AdvisorName{Advisors}
 % RELATORE - PROF. NOME E COGNOME
-\relatore{prof.\ Stefano Di Carlo}
+\relatore{Stefano Di Carlo}
 % RELATORE AGGIUNTIVO - PROF NOME E COGNOME
 % SE SI HA SOLO UN RELATORE ELIMINARE E CAMBIARE Advisors in Advisor
-\secondorelatore{prof.\ Alessandro Savino}
+\secondorelatore{Alessandro Savino, Maurizio Martina, Guido Masera}
 
 % TUTORE AZIENDALE - TITOLO NOME E COGNOME
 %\tutoreaziendale{Ing. Pug Dog}
@@ -180,7 +243,7 @@ SummaryOfArticles,%
 
 %INTERLINEA - DEFAULT 1 - NON ESAGERATE, NON SUPERATE MAI 1.3 ;)
 %\interlinea{1.2}
-
+kile
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \frontmatter
@@ -243,6 +306,9 @@ In the design of architecture we use a FT technique that is able to detect and c
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % INDICI - ELIMINARE GLI INDICI NON NECESSARI
+\hypersetup{%
+	linkcolor=black
+}
 
 % INDICE GENERALE
 \tableofcontents
@@ -256,6 +322,9 @@ In the design of architecture we use a FT technique that is able to detect and c
 % INDICE DEI CODICI
 \listofcodes
 
+\hypersetup{%
+	linkcolor=blue2
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \mainmatter
@@ -265,13 +334,15 @@ In the design of architecture we use a FT technique that is able to detect and c
 \include{TechnicalBackgroundAndStateOfArt}
 %\include{CV32E40PCore}
 %\include{CV32E40PFaultToleranceSimulationEnvironment}
-%$\include{FaultToleranceIFStageForCV32E40PCore}
+%\include{FaultToleranceTemplate}
+\include{TravulogMetalanguageForSVTransformation}
+%\include{FaultToleranceIFStageForCV32E40PCore}
 \include{Conclusion}
 \include{SummaryOfArticles}
 
 \appendix
 % INCLUSIONE APPENDICI - - PERSONALIZZARE - TENERE COERENTE CON LISTA IN ALTO
-\include{app_a}
+%\include{app_a}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
