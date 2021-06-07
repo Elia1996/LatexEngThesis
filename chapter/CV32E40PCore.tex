@@ -1,0 +1,87 @@
+\chapter{RISC-V and CV32E40P Core}{
+	% Article & books
+	% INTRO
+	RISC-V is a free and open Instruction Set Architecture (ISA) with a small instruction set (Reduced Instruction Set Computer) at the heart of core of a System On Chip (SOC).
+	An ISA is the abstract description of core instruction, registers, data types and extension, without design imposition. 
+	Many implementation of a CPU can rely on the same ISA  using different design, in this way software used in these different implementation could be equal.
+	RISC-V can be seen a first try to standardize the Instruction Set world without using new technology.
+	The focus is on modular approach and extensibility in order to increase field of use of the ISA.
+    
+    For these reasons the use of a free and open ISA worldwide unlock partially software from hardware implementation since the interface is always about equal.
+    This subdivision speed up computer CPU progress with lower efforts in software support.
+    Indeed companies efforts can be focused more on design and less on software support since the interface is the same.\\
+    
+    RISC-V is maintained by the RISC-V foundation born in 2015, it is driven by open collaboration in order to improve RISC-V ISA.
+    The use of free and open collaboration speed up bug resolution, reduce design risk and lead to speed up in design techniques.
+    In order to be used worldwide the RISC-V architecture use a Reduced Instruction Set  of 47 Base Instruction, the ISA is designed with a modular approach to easily add extensions. 
+    In this way the ISA can be used for whatever application since the core can be customized according to application and field of use.
+    It is already used in computer, supercomputer, embedded application and it now supports by many Operative System like RTOS and Linux.\\
+    
+    It is precisely the fact that it can be customized that increase the worldwide use.
+    This increase the test done on the ISA implementation which lead to ISA improvement and increase the ISA dependability.
+    
+    Starting from these ideas we could summarized some benefits of a open and free ISA \bscite{Asanovic2014} :
+    \begin{itemize}
+        \item \textbf{Greater Innovation:} More people working on the same ISA speed up innovation;
+        \item \textbf{Shared Open Core Design:} with a free ISA the implementation (e.g. System Verilog design) can be shared as open source, this prevent malicious traps doors and increase transparency, it also allows the born of new industries that create products from open design;
+        \item \textbf{Cheaper Processors:} the reduction of company work on software stack decrease the processors cost, this speed up widespread of IoT;
+        \item \textbf{Longevity of Software Stack:} a standard ISA allow the creation of an endurance Software Stack since it don't depends to a company;
+        \item \textbf{Architecture Education and Research closer to real application: } the academic world could work on open hardware and software.
+    \end{itemize}
+    
+    At 2020 the 23\% of ASICs and FPGAs project incorporate at least one RISC-V core and it is foreseen that in 2025 will be used 62.4 Billion of RISC-V Cores respect to 10 Billion of 2020.
+    This is surely a positive sign of open ISA strategy, it means that many industries are rely on RISC-V ISA architecture and they use it to speed up their internal design.
+    
+	
+	\section{History}{
+	    ISA of RISC-V started in 2010 in a project for the Parallel Computing Laboratory (Par Lab) at Berkeley held by Prof. Krste Asanović and graduate students Yunsup Lee and Andrew Waterman.
+	    The idea of RISC-V ISA born to create a complete open hardware ecosystem, indeed until that moment the main ISA was proprietary and academic world work on non realistic architecture.
+	    Anyway the outcome of an open ISA also help industries since the main costs an complexity in the creation of a new chip is the development of software stack for new ISAs.
+	    Indeed any change to the ISA means redevelop some parts of software with high costs.
+	    Due to historical reason ISAs are proprietary, but in the last 40 years no meaningful development arise in this field and so there aren't no meaning to avoid ISA standardization. 
+	    Starting from this ideas the RISC-V project begin and was developed up to now.\\
+	    
+	    The first release of RISC-V ISA was in 2011 and it was under the Berkeley Software Distribution (BSD) license. 
+	    After some year of RISC-V use and some publication \bscite{Asanovic2014} in 2011 was created the first chip in 28nm FDSOI and in 2015 was held the first RISC-V workshop, in the same year was founded the RISC-V foundation with 36 members \bscite{RISCVHistory}.
+	    
+	    In the following year the RISC-V ISA was put under Creative Common license in order to enable an easy use and open contribution.\\
+	    
+	    In the year 2013-3018 in the UC Berkeley ASPIRE Lab was created many RISC-V compatible free processors, today RISC-V Foundation continue to support RISCV ISA standardization helping industries to use it, the versions of the ISA is now frozen at 2019  in order to simplify development of RISCV core. 
+	    These are the official ISA  standard: \href{https://github.com/riscv/riscv-isa-manual/releases/download/Ratified-IMFDQC-and-Priv-v1.11/riscv-privileged-20190608.pdf}{RISCV-privileged} and  \href{https://github.com/riscv/riscv-isa-manual/releases/download/Ratified-IMAFDQC/riscv-spec-20191213.pdf}{RISCV-unprivilged}. 
+	    Instead in this page you can find all original standard documents: \href{https://riscv.org/technical/specifications/}{RISCV-spec}.
+	}% end History 
+
+	\section{RISC-V ISA}{
+	    RISC-V ISA is described in two document:
+	    \begin{itemize}
+	        \item \textbf{riscv-privileged:} Or Kernel mode, in this document are described privileged  instructions any attempt to execute this instruction from User Mode will not be executed and it is considered illegal instructions. These are the instructions used in the Operative System to perform operations.
+	        \item \textbf{riscv-unprivileged:} Or Non privileged mode, it is made by all instructions that can be run only in user mode.
+	    \end{itemize}
+	    
+	    In these two documents the ISA is described avoiding implementations details as much as possible. At the beginning of the standards are defined some terms \bscite{RISCV_unprivileged}:
+	    
+	    \begin{itemize}
+	        \item \textbf{core:} An architecture is defined a core if it contains an instruction fetch; 
+	        \item \textbf{harts:} Are hardware threads that can be support by the ISA, a RISC-V compatible core can supports multiple harts;
+	        \item \textbf{coprocessor:} It is an instruction set extension used by the RISC-V compatible core, this coprocessor is considered as a separate unit that is controlled by a RISC-V instruction flux but it have relative autonomy respect to primary RISC-V core, this is an example of RISC-V coprocessor programming for sensor reading \href{https://github.com/espressif/esp-idf/blob/c13afea635adec735435961270d0894ff46eef85/docs/en/api-guides/ulp-risc-v.rst}{RISC-V sensors};
+	        \item \textbf{accelerator:} This component are really useful to perform specialized complex task, e.g. I/O and AI accelerator, the first manage I/O processing task while the second could be a voice recognition AI.
+	    \end{itemize}
+	    As you can see RISC-V can have extensions and coprocessors, it can also have many system-level organizations; single-core, many-core shared memory and so on.
+	    
+	    
+	    A RISC-V ISA implementation must contain base integer ISA, starting from this basis can be added optional extensions. 
+	    The base integer ISA is enough to support a compilers, assemblers, linkers, and operating system, in this way it provide a starting point to custom implementations.\\
+	    
+	    The RISC-V ISA is divided in four base ISA family, each family is distinguished by a different register width and the number of corresponding address space. 
+	    The four family are RV32I, RV32E (with 32 bits) RV64I (64 bits) and RV128I (128 bits), naturally 128 bits is a huge nu
+	}% end RISC-V ISA
+	
+	\section{CV32E40P core}{
+		
+	}% end cv32e40p Core
+
+	\section{FT RISC-V State Of Art}{
+		
+	}% end FT RISC-V State Of Art
+
+}
