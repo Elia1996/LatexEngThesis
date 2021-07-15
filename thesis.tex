@@ -45,6 +45,11 @@
 \usepackage{lipsum}  
 \usepackage{wrapfig}
 \usepackage{parcolumns}
+\usepackage{pmboxdraw}
+\showboxdepth=\maxdimen
+\showboxbreadth=\maxdimen
+
+\usepackage{csvsimple}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Code style
@@ -91,8 +96,8 @@
 
   
 % estensione riferimenti a figura
-\newcommand{\formularef}[1]{\textbf{\textcolor{blue2}{ \textcolor{blue2}{\vref{#1}}}}}
-\newcommand{\figref}[1]{\textbf{\textcolor{blue2}{Figure \textcolor{blue2}{\vref{#1}}}}}
+\newcommand{\formularef}[1]{\textbf{\textcolor{blue2}{ \textcolor{blue2}{\ref{#1}}}}}
+\newcommand{\figref}[1]{\textbf{\textcolor{blue2}{Figure \textcolor{blue2}{\ref{#1}}}}}
 \newcommand{\bscite}[1]{\textcolor{black}{\supercite{#1}}}
 \setlength{\parindent}{0pt}
 %\include{mypackage}
@@ -167,9 +172,9 @@ chapter/Introduction,%
 chapter/TechnicalBackgroundAndStateOfArt,%
 chapter/CV32E40PCore,%
 chapter/TravulogAndHTravulog,%
+chapter/Verification,%
 chapter/Conclusion,%
-chapter/FutureWorks,%
-chapter/app_a,% SummaryOfArticles,%
+chapter/app_a,%
 }
 
 % FILE DI BIBLIOGRAFIA
@@ -214,10 +219,16 @@ chapter/app_a,% SummaryOfArticles,%
 \AdvisorName{Supervisor}
 \CoAdvisorName{Co-supervisors}
 % RELATORE - PROF. NOME E COGNOME
-\relatore{Proff. Stefano Di Carlo}
+\relatore{Prof. Stefano Di Carlo}
 % RELATORE AGGIUNTIVO - PROF NOME E COGNOME
 % SE SI HA SOLO UN RELATORE ELIMINARE E CAMBIARE Advisors in Advisor
-\secondorelatore{ciccio}
+\secondorelatore{%
+  \begin{tabular}[t]{@{}l@{}}
+  Prof. Alessandro Savino\\
+  Prof. Maurizio Martina\\
+  Prof. Guido Masera\\
+  \end{tabular}
+}
 
 
 
@@ -254,7 +265,7 @@ chapter/app_a,% SummaryOfArticles,%
 \vspace*{\stretch{1}}
 \begin{flushright}
 \noindent
-To my family and Anna.
+To my family and Anna
 \end{flushright}
 \vspace*{\stretch{6}}
 \cleardoublepage
@@ -281,34 +292,63 @@ Henry Ford
 
 % RINGRAZIAMENTI - PERSONALIZZARE
 \ringraziamenti
+I thank my supervisors Prof. Stefano Di Carlo, Prof. Alessandro Savino, Prof. Maurizio Martina and Prof. Guido Masera for their technical support and
+guidance. I would also like to thank my thesis teammates Luca Fiore and Marcello Neri for making the days and evenings spent working on our thesis so much enjoyable, I am very happy to have shared this experience and some previous projects with them. My thoughts also go to Christian Fabiano and Andrea Trufini from whom I learned a lot during courses, in particular I thank Andrea for all the days spent studying together and the crazy evening releases in Turin. 
+
+
+I want to thank my whole family, the best I could hope to have, I feel really lucky when I think of my parents and how they have believed in me during these years. A special thought goes to my two sisters, they have put up with me and supported me throughout my journey. I will always love them. 
+
+
+Finally I want to thank Anna, we have given each other so much in these five years, without her my life would have been very different, certainly sadder and less fun. In this thesis I have used the passion that I have in all the projects I do, but I got the strength and tenacity to complete this work from her.
 
 \newpage
 {\Huge \textbf{Abstract} \par}
 \vspace{.3in}
-The miniaturization of the microelectronic components together with the use of integrated circuits in more and more application leads to an increasing use of FT (Fault Folerant) architecture. This thesis investigate the use of FT techniques in a stage of the cv32e40p open source core. We used fault injection simulation to divide our stage in three blocks with increasing level of    
+The miniaturization of the microelectronic components together with the use of integrated circuits in increasingly more application lead to an increasing use of Fault Tolerant (FT) systems. For this reason new techniques are required to automatize the transformation of systems from base to FT.  This thesis investigates the automatic application of FT techniques inside the stage of a core written in SystemVerilog (SV). The aim of this project is to create a Toolchain able to apply different templates to an SV architecture in order to automatize the conversion of an architecture from base to Fault Tolerant. The templates  are written in a new metalanguage called Travulog and they can be applied to an architecture using directly Python or HTravulog metalanguage inside the SystemVerilog. 
+
+
+
+The Toolchain is used to convert the Instruction Fetch stage of the RISC-V cv32e40p to Fault Tolerant. Anyway the Toolchain can be used for whatever SystemVerilog architecture with the great advantage to be open source and extendible to new uses.
 
 %%%%%%%%%%%%%%%%
 
 % ABSTRACT - PERSONALIZZARE
-\sommario
+\newpage
+{\Huge \textbf{Summary} \par}
+\vspace{.3in}
 A \textbf{ FT (fault tolerant) system} continues to work properly even if some of the internal components are broken; this feature is necessary when a failure may cause damage to people, dangerous destruction, military upset or loss of data. FT systems are essential in aerospace, transport, medical and utility industries and they are usually composed by a power source, an hardware system and a software system, each of these parts are fault tolerant depending on application.
 
-This work concerns the hardware system and in particular the chip architecture design. In this context the faults are \textbf{transient}, \textbf{intermittent} or \textbf{permanent} and they are generated by manufacturing defects, system degradation or particle strikes.\textbf{ Manufacturing} defects generate permanent faults and they reduce the yield with an increase in the cost per piece since the affected chips are discarded during quality control process. \textbf{System degradation} produces permanent faults and it is a life-limiting phenomenon that brings the chip to wearout phase. Finally, \textbf{particle strikes} produce both transient or permanent faults. 
+This work concerns the hardware system and in particular the chip architecture design. In this context the faults are \textbf{transient}, \textbf{intermittent} or \textbf{permanent} and they are generated by manufacturing defects, system degradation or particles strikes.\textbf{ Manufacturing} defects generate permanent faults and they reduce the yield with an increase in the cost per piece since the affected chips are discarded during quality control process. \textbf{System degradation} produces permanent faults and it is a life-limiting phenomenon that brings the chip to wearout phase. Finally, \textbf{particles strikes} produce both transient or permanent faults. 
 These problems rely on the application: system degradation generally depends on chip temperature, clock speed and the workload, otherwise particle strikes rely on sources of alpha particles or neutrons, which are generated by the cosmic rays or radioactive materials.
 
-For these reasons an ideal fault tolerant system should be protected against transient faults caused by particle strikes and it should manage permanent faults in order to increase the yield and chip life. A complete protection against faults creates drawbacks in speed, area and power budgets. This is the reason why we create a configurable architecture where faults coverage can be changed according to the specific application and the project constrains.   
+For these reasons an ideal fault tolerant system should be protected against transient faults caused by particle strikes and it should manage permanent faults in order to increase the yield and chip life. A complete protection against faults creates drawbacks in speed, area and power budgets. This is the reason why we create a configurable architecture where faults coverage can be changed according to the specific application and the project constrains.   \\
 
 In this Master Thesis the \textbf{Instruction Fetch of cv32e40p} core is converted in a \textbf{configurable fault tolerant stage} in order to reduce failures in fetching instructions. The core used was designed by the "OpenHW Group" organization and it can be integrated in PULPissimo platform in order to create a complete microcontroller architecture. 
 
-Before the design of the architecture we study the cv32e40p core and then we proceed with the creation of the simulation environment, building the script used for all simulations. These tools born in the cv32e40p \textit{core-v-verif} repository with te purpose of automatize compilation of testbenches and their simulation using QuestaSim and Modelsim. 
+Before the design of the architecture we study the cv32e40p core and then we proceed with the creation of the simulation environment, building the script used for all simulations. These tools born in the cv32e40p \textit{core-v-verif} repository with the purpose of automatize compilation of testbenches and their simulation using QuestaSim and Modelsim. 
 
- The most important feature of the tool is the \textbf{optimized fault injection method} used to simulate faults in the architecture. We use a worst case approach injecting faults only in sequential parts (FF and memory), in this way we consider that all faults injected in the combinatory path (for example after a particle strike) reach a FF and are sampled. This is not always true since some bits can be logical masked in the following cases: if they are don't care bits when fault occurs, if they can be electrical masked due to attenuation before latch or if the fault don't have the time to reach a FF (latch-widows). All this masks can be clustered in AVF (Architecture Vulnerability Factor) which is 1 if every fault generate a failure, otherwise it is lower. Knowing this we can assert that our tool works in the worst-case scenario since the AVF of each combinatory path (excluding inputs) is consider equal to one.
+The most important feature  is the \textbf{optimized fault injection method} used to simulate faults in the architecture. 
+This tool is able to inject faults in a list of signals set in the tcl script, in this way we are able to use both a worst case approach injecting faults only in sequential parts (FF and memory) or inject fault also in combinatory path increasing simulation time and precision. 
+The first method is faster since we inject faults in less signals but in this way we consider that all faults injected in the combinatory path (for example after a particle strike) reach a FF and are sampled. This is not always true because some bits can be logical masked in the following cases: if they are don't care bits when fault occurs, if they can be electrical masked due to attenuation before latch or if the fault don't have the time to reach a FF (latch-windows). 
+Knowing this we can decide to inject faults in sequential parts or in all circuits to vary the trade off between accuracy and simulation time.
 
-Apart from this first considerations the tool optimizes simulation times also takes advantage of \textit{vcdstim} feature in the case of single stage simulations. Indeed the whole core is  initially simulated using a benchmark firmware, meanwhile the input and output data of a specific stage are saved into .vcd and .wlf files, finally a stage-specific simulation started using .vcd as input (\textit{vcdstim} feature). In this way only one stage is simulated and we reduce working times. \textbf{Stage-specific simulation} can be repeated a specified number of times using fault injection and the output of the stage is finally compared with .wlf output file in order to find failures.   
+Apart from this first considerations the tool optimizes simulation time also takes advantage of \textit{vcdstim} feature in the case of single stage simulation. Indeed the whole core is  initially simulated using a benchmark firmware, meanwhile the input and output data of a specific stage are saved into .vcd and .wlf files, finally a stage-specific simulation started using .vcd as input (\textit{vcdstim} feature). In this way only one stage is simulated and we reduce working times. \textbf{Stage-specific injection simulation} can be repeated a specified number of times and each time the output of the stage is compared with .wlf output file in order to find failures.   
 
-Using our tool we first simulate fault injection in the reference IF stage of cv32e40p core and we find a fault tolerance equal to 30\%. Later we use simulation results to understand the fault masking for each signals and then we divide \textbf{IF stage} in \textbf{three main blocks}. \textit{Each block have increasing level of intrinsic fault tolerance in original architecture} and knowing this we apply FT techniques to each block. Anyway during simulations and synthesis we can enable FT for one, two or all blocks, depending on these settings we can manage area, speed, power and FT trade-off.
+Using our tool we first simulate fault injection in the reference IF stage of cv32e40p core and we find a fault tolerance equal to 87\%. Later we use simulation results to understand the fault masking for each signals and then we use this information to understand which are the most critical blocks of the IF stage. 
+
+In the meanwhile we begin to apply FT techniques to the Compressed Decoder obtaining a FT Compressed Decoder that has been tested and verified, using this new FT block we create a template written in the new metalanguage Travulog. This template can be applied to a whatever reference architecture with our Toolchain written in Python to obtain a new FT architecture. We use this Toolchain, the Travulog template and HTravulog ( a hidden version of Travulog) to divide the IF stage in six parts and apply FT model to each of them. The model that we applied is the same for each block.
+
+The Travulog template applies a transformation to the reference design that can be controlled with some System Verilog parameters, for these reason once we apply the template to each internal block of the IF stage we only enable the possibility to protect each block. In this way we create an \textit{Automatic Transformation Toolchain} with which we create a \textit{Configurable FT IF stage} from the reference one. This conversion can be redone every time you change something to the reference IF stage, in this way we speed up FT design and decrease maintainability costs. Using this method during simulations and synthesis we can enable FT for a set of blocks and depending on these settings we can manage area, speed, power and FT trade-off.
  
-In the design of architecture we use a FT technique that is able to detect and correct transient faults using \textbf{ TMR} (Triple Modular Redundant), this methods works only if each of the three identical blocks compared don't have permanent faults, and if we assume to neglect multiple particle strikes. Although multiple strikes is improbable, permanent faults is already present after manufacturing process and increase during time, for this reason we implement a technique to detect and correct this faults using some backup stages. Summarizing \textit{we use TMR to manage transient faults and additional logic to protect against permanent faults}. In this way if all FT architecture of the IF stage are enabled during syntesis the final result is an higher yeld, a longer life and a protection against noise and particle strikes. The last important feature of the design is the saving of \textit{permanent faults information} in the \textbf{CSR} (Common and Status Registers),  in this way we could restore permanent faults settings after a reboot. 
+In the design of FT architecture we use a FT technique that is able to detect and correct transient faults using \textbf{ TMR} (Triple Modular Redundant), this methods works only if each of the three identical blocks compared don't have permanent faults, and if we assume to neglect multiple particle strikes. Although multiple strikes is improbable, permanent faults is already present after manufacturing process and increase during time, for this reason we implement a technique to detect this faults. 
+
+In the end looking at the fault injection results on the reference IF stage we have identified the Prefetch Buffer as the most critical block, we protect only that block and run fault injection simulation obtaining a fault protection of 96\%, if we want to further increase protection we can also protect Aligner. As we have seen these changes can be done easily changing some SV parameters. Finally we protect each block obtaining a fault protection of 99\%.
+
+Summarizing the main results of this thesis is the creation of a \textit{Fault injection tool for CV32E40P core}, the creation of a \textit{Configurable FT IF stage} and the parallel design of the \textit{Automatic Transformation Toolchain} for Travulog/Htravulog (TV/HTV). Using the Toolchain and TV/HTV code we are able to recreate the Configurable FT IF stage each time we apply changes to the reference design. The TV/HTV code can be used in other project to speed up FT design solution increasing maintainability, even if the TV/HTV metalanguage has been designed for FT application it can be used in other application whenever can be defined a transformation template, the metalanguage can also be extended to enlarge field of use.
+
+
+
+%Summarizing \textit{we use TMR to manage transient faults and additional logic to protect against permanent faults}. In this way if all FT architecture of the IF stage are enabled during syntesis the final result is an higher yeld, a longer life and a protection against noise and particle strikes. The last important feature of the design is the saving of \textit{permanent faults information} in the \textbf{CSR} (Common and Status Registers),  in this way we could restore permanent faults settings after a reboot. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -324,7 +364,7 @@ In the design of architecture we use a FT technique that is able to detect and c
 \listoffigures
 
 % INDICE DELLE TABELLE
-\listoftables
+%\listoftables
 
 % INDICE DEI CODICI
 \listofcodes
@@ -340,12 +380,12 @@ In the design of architecture we use a FT technique that is able to detect and c
 \include{chapter/Introduction}
 \include{chapter/TechnicalBackgroundAndStateOfArt}
 \include{chapter/CV32E40PCore}
-%\include{CV32E40PFaultToleranceSimulationEnvironment}
-%\include{FaultToleranceTemplate}
+%\include{chapter/FaultToleranceTemplate}
 \include{chapter/TravulogAndHTravulog}
 %\include{FaultToleranceIFStageForCV32E40PCore}
+\include{chapter/Verification}
 \include{chapter/Conclusion}
-%\include{SummaryOfArticles}
+\include{app_a}
 
 \appendix
 % INCLUSIONE APPENDICI - - PERSONALIZZARE - TENERE COERENTE CON LISTA IN ALTO

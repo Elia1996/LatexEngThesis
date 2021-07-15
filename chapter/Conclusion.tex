@@ -1,3 +1,26 @@
-\chapter{Conclusion}{
+\chapter{Conclusions}{
 	\label{chap:Conclusion}
+	In this thesis we have designed an Instruction Fetch stage for the cv32e40p core with these properties:
+	\begin{itemize}
+	    \item \textbf{Automatic Creation:} We create a Travulog/HTravulog Toolchain able to transform the original Instruction Fetch in a Fault Tolerant stage. This means that we automatize the creation of the stage starting from: some Travulog template, some HTravulog code in the original IF stage and the Toolchain.
+	    \item \textbf{Configurable FT level:} In the design of the templates we have focused our attention to the configurability of the final Fault Tolerant IF stage, indeed we use many parameters which can change the FT level and properties of each block. In this way the new IF stage will be configurable according to the application.
+	    \item \textbf{Maintainability:} The automatic creation of the Fault Tolerant IF stage allows to the designer a higher level of maintainability because a change in the original architecture can be applied to the converted IF stage easly running the Toolchain. 
+	\end{itemize}
+	
+	Another important result of the thesis is the creation of the Travulog/HTravulog Toolchain that make possible the automatic creation of the FT IF stage.\\
+	
+	The Toolchain is open source and can be used for many application, indeed it enable the transformation of an architecture using a Travulog Template. During this thesis we only show Fault Tolerant Template, anyway you can design whatever type of template you needs and verify the Toolchain support, if new Travulog commands is needed you can add it to the Python Toolchain.\\
+	
+	In this way we create a tool to transform architectures reducing design time and encouraging the template reuse. For example the Fault Tolerance template designed during this thesis can be used for other architectures.\\
+	
+	In this thesis we also show that both Full and Trade-off configurations of the new Fault Tolerant IF stage created with the Toolchain has good results in terms of FT level ( respectively 99\% and 96\%). 
+	
+	\paragraph{Future Work}{
+        Surely the main work that could be done is test the remaining configurations of the new IF stage to see how it works. This is a long job because of the simulation time and it cannot be done completely, so you should choose the most important configurations and test those. The response to the permanent errors when varying the FT in the blocks and the use of the triple voter should certainly be tested.
+
+        The thesis opens new developments towards automating the design of architectures, so an important work is the improve of the toolchain. 
+        For example to facilitate the use  we could add others Travulog/HTravulog commands and create a complete manual of the language.
+        
+        Many work can also be done on the creation of Template Library for Fault Tolerant transformation, in this way complex FT architectures can be reused reducing design time and during the creation of the template can be exploited all new FT techniques  ( e.g., genetic algorithm \bscite{Optimization_of_a_Cascading_TMR_system_configuration_using_Genetic_Algorithm}, resilient structure \bscite{Resilient_Hardware_Design_for_Critical_Systems}, byzantine fault tolerance \bscite{Towards_Byzantine_fault_tolerant_publish_subscribe_A_state_machine_approach} ).
+	}
 }

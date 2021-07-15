@@ -1,0 +1,19 @@
+software                      ,     FT lev,     N sim,     N err
+coremark\_1                    ,      96.8,       468,        15
+counters                      ,      96.5,       519,        18
+csr\_instructions              ,      96.0,       524,        21
+cv32e40p\_csr\_access\_test      ,      96.4,       498,        18
+dhrystone                     ,      95.4,       482,        22
+fibonacci                     ,      95.4,       525,        24
+generic\_exception\_test        ,      96.8,       537,        17
+hello\_world                   ,      97.7,       483,        11
+illegal                       ,      96.6,       502,        17
+interrupt\_bootstrap           ,      98.5,       475,         7
+interrupt\_test                ,      96.9,       518,        16
+misalign                      ,      96.7,       512,        17
+modeled\_csr\_por               ,      97.9,       487,        10
+perf\_counters\_instructions    ,      96.0,       529,        21
+requested\_csr\_por             ,      96.2,       497,        19
+riscv\_arithmetic\_basic\_test\_0 ,      96.7,       522,        17
+riscv\_arithmetic\_basic\_test\_1 ,      94.2,       504,        29
+riscv\_ebreak\_test\_0           ,      98.6,       502,         7

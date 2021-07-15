@@ -1,0 +1,220 @@
+\chapter{Verification}{
+	\label{chap:verification}
+    The verification of our architecture was done starting from the existing verification repository of the cv32e40p. 
+    It is maintained by the Open HW Group \url{https://github.com/openhwgroup/core-v-verif} and all its feature are described in detail here \url{https://core-v-docs-verif-strat.readthedocs.io/en/latest/}.
+    
+    
+    
+    This part of the thesis is done together with Marcello Neri and Luca Fiore, we fork the core-v-verif repository and we start to create our tools in \url{https://github.com/RISKVFT/core-v-verif}, here we create some scripts which automatize verification through:
+    \begin{itemize}
+        \item \textbf{Benchmarks compilation:} benchmarks are a set of programs written in C language which should be cross compiled in order to run on the cv32e4op core. The toolchain for the compilation already exists, we simpify the interface to speed up experimentation.
+        
+        \item \textbf{Core Verification:} we need a way to verify that our new stage inside the core is working properly, so we create a comparison structure in which the  reference core is simulated saving inputs and outputs of the reference stage. Then our new stage inside the core is simulated using reference inputs as stimulus  and finally the outputa of our stage are compared to the reference one to find any differences. 
+        This comparison can be done for whatever software of the benchmark.
+        
+        \item \textbf{Fault Injection:} Once the new Instruction Fetch is verified we should check the behaviour of the stage respect to faults, to do this we start from the verification structure: as first step we save reference inputs and output of the stage as before, then we simulate the core with the new stage but we inject fault during simulation, finally the outputs are compared to find how many errors arrive to the output of the stage. The final FT level is the ratio between the output errors and injected errors.
+        
+        
+        In this process the most challenging part is the fault injection, indeed we spent many time to understand how inject faults, anyway now our script is able to inject transient and permanent faults, the injection is uniformly distributed along simulation time and on all bits of the signals, finally the signals in which inject faults can be changed. 
+        
+        We choose Statistical Fault Injection since it is the most common used methods, it exists also analytical estimation of FT level \bscite{SER_estimation_analytical} and ground radiation test.
+        
+        \item \textbf{FT level evaluation:} During all simulation our script save many data about faults and errors, in this way at the end of the process it automatically calculates the number of faults and the FT level ( which is $1-\frac{N_{out\_errors}}{N_{injected\_faults}}$).In order to have a better coverage of core functionality during Fault Injection we simulate all benchmark and we create a script that elaborate all FI data of these simulations, giving a global FT level percentage to speed up FI verification.
+    \end{itemize}
+    
+    The script which manage all the previous functionalities is called \textit{comp\_sim.sh} and it is located in core-v-verif/cv32/sim/core/. In order to simplify the use of the script we create a man page \textit{comp\_sim\_man} in the same directory which  you can visit using man command : \linebreak "man ./comp\_sim\_man". 
+    The man page can be visualized also with the command \linebreak"./comp\_sim.sh -h".
+    
+    In the next sections we analyze the simulation flow we use in the comp\_sim script and then we discuss the main results.
+    \newpage
+    \section{Simulation Flow}{
+        Now we start to describe in detail the flow we have followed to verify and simulate fault injection in the if stage, during the description we also show directories organization, scripts behaviour and command arguments of comp\_sim.sh. We finally underline some design  and simulation choice. 
+        This is a brief summary of the next paragraph:
+        \begin{itemize}
+            \item \textbf{Initial Setup:} It describe the basic operations to perform in order to begin to simulate the new stage.
+            \item \textbf{Benchmark Compilation:} It describe where to place benchmark programs and how to cross-compile it using comp\_sim.sh.
+            \item \textbf{Core Functional Verification:} It describe all steps performed to compare reference and new architecture together, it also explain how to execute this comparison using comp\_sim.sh script.
+            \item \textbf{Fault Injection Process:} Here is described the structure of the Fault Injection simulation using vsim\_stage\_compar.tcl script, it is also described how to execute a FI simulation using comp\_sim.sh.
+            \item \textbf{Number of simulations and Accuracy:} It describe the Statistical Fault Injection method and the formula used to find the number of simulation to perform for a certain accuracy.
+        \end{itemize}
+    
+        \subsection{Initial Setup}{
+            When you clone for the first time the core-v-verif repo from \url{https://github.com/RISKVFT/core-v-verif.git} you should checkout the FT\_verif\_Elia branch and run a little script which set current base directory in all scripts, its name is \textit{set\_core\_v\_verif.sh} and it is located in core-v-verif/ directory. Now all scripts know what is the path before core-v-verif dir and they could build absolute paths correctly.\\
+            
+            The complete cv32e40p core with our new if stage is in \url{https://github.com/RISKVFT/cv32e40p/tree/FT_Elia} repository, so as first step set it as the ft architecture, this can be done using \textbf{-a} option of comp\_sim.sh, in particular we use \linebreak "-a ftr https://github.com/RISKVFT/cv32e40p" to set the repository url and \linebreak"-a ftb FT\_Elia" to set our branch. 
+            We also set the reference architecture with \linebreak "-a refr https://github.com/RISKVFT/cv32e40p" and "-a refb master", this will be the reference architecture that we will use to do the functional verification.
+            At the end of settings we can check them using "-a i".
+            
+            Each time that the script is run it checks the repositories and the branches of reference and ft repositories which are located at core-v-verif/core-v-cores, if the repository or the branch is wrong the script clones and changes branch automatically.
+        }
+        
+        \subsection{Benchmark Compilation}{ 
+            
+            In order to compile all software of the benchmark we create the directory
+            \linebreak cv32/tests/programs/custom\_FT where we saved all c file. Then we create the build\_all.py script in this directory which allows to cross compile all c file using make files, the output hex files are saved in \breakline cv32/tests/programs/out dir. 
+            
+            
+            In order to easly copile c files we should set the compiler script and the out directory into comp\_sim using the command:\\
+            "-b d cv32/tests/programs/build\_all.py cv32/tests/programs/out", the path should be relative to the core-v-verif directory. Now after any change to the c file we can easly recompile it with "-b c" command. At the end of the process we have all .hex file in the "out" directory and they are ready to be used in core simulation. 
+        }% end Simulation Script comp\_sim.sh
+        
+        \subsection{Core Functional Verification}{
+            The functional verification of the core is the first important step to check the correct behaviour of the new core in normal condition.
+            
+            To do this we should compare the output of the reference core with the core containing the new stage, anyway this approach is slow since we needs to simulate the whole core using many resources and time.
+            
+            In order to reduce computational load we decide to implement a way to compare both the complete core or only a certain stage of the core. To do this we follow these steps:
+            \begin{itemize}
+                \item \textbf{Save Reference Input:} Both for core or for stage comparison the first step is to run the reference architecture and save the input data. So we create a tcl script in cv32/sim/questa directory called vsim\_save\_data\_in.tcl which can be run with \line "-b asvb ref hello\_world save\_data\_in if\_stage" , in this command asvb argument is a legend for the means and order of the next arguments: "a" is related to "ref" that is the reference architecture, "s" indicates the software to use that in this case is "hello\_world" ( the software should be a .hex file in the out dir of the benchmark which we compile before),  "v" indicates the suffix of the tcl script, in this case "save\_data\_in", and finally "b" is related to the name of the stage. 
+                
+                The order of the letter in the first arguments give the order of the next arguments, e.g.,the previous command is equivalent to  \breakline "-b avbs ref save\_data\_in if\_stage hello\_world".
+                
+                The command described simulate the reference architecture with hello\_world software using vsim\_save\_data\_in.tcl as QuestaSim script for saving the input data of the if\_stage in a .vcd file located in \breakline /cv32/sim/core/sim\_FT/dataset/, this vcd file will be automatically named \breakline "gold-ref-if\_stage-hello\_world-in.vcd".
+                
+                \item \textbf{Save Reference Output:} In this case the procedure is very close to the previous, indeed the command to run is \breakline "-b asvb ref hello\_world save\_data\_out if\_stage", it will creates the file \breakline "gold-ref-if\_stage-hello\_world-out.wlf .
+                This is why to enable the output comparison we needs a wlf file.
+                
+                \item \textbf{Compare Architectures:} 
+                
+                To compare the two architecture we should use
+                \breakline vsim\_stage\_compare.tcl script (always located in questa directory). This script is the most complex because it contains all code to do comparison, fault injection and data saving. The behaviour is changed using some environmental variables which are set by the comp\_sim script. For the current step we use this script to simulate the new stage using the Reference Inputs as stage stimulus and to compare the simulation outputs with the Reference wlf file, all these operations can be done with the command: \breakline "-b atvsb ref ft stage\_compare hello\_world if\_stage".
+                Here comp\_sim use the previous vcd and wlf file created, so if they don't exist we will have some errors.
+                
+                \item \textbf{Show results:} At the end of the simulation all data file are saved in sim\_FT/sim\_out directory, here there will be a file called cnt\_error-if\_stage-hello\_world-1-0.txt , where "1" is referred to the number of simulation while "0" means that we don't use fault injection. The second file is the info-if\_stage-hello\_world-1-0.txt, it contain the simulation time duration and the number of signals in which can be applied fault injection. Finally there is a file called signals\_fault\_injection-if\_stage-hello\_world-1-0.txt which we will use in FI.
+                So at the end of the simulation the cnt\_error file should contain "0" as error number, in this way we have checked that the new stage give the same output of the reference.
+            
+                \item \textbf{GUI:} When some errors occurs we could run again the comparison command using the -g option to open the GUI while QuestaSim does comparison, in this way we could see all signals and the source of error in the architecture.         
+            \end{itemize} 
+            
+            The previous steps should be repeated for each c firmware in the benchmark in order to increase as much as possible the coverage of the stage verification.
+            
+            After a high number of test we decide to condense the flow above in a single command: \breakline "-sfiupi atvsb ref ft stage\_compare hello\_world if\_stage" . This command is powerful because it checks that the existence of wlf and vcd files, if they don't exist the script begins the process to create them automatically, then it runs the simulation to verify the stage. 
+            As before if we need to use the gui we should only add "-g" as last argument and during simulation the gui will open.
+            
+            Our new if\_stage is highly configurable through SV parameters, therefore a complete verification means the check of each configuration, anyway there are approximately 96 possible state for each sub-block and so about 500 possible configuration for the overall stage.
+            This is a really high number and so we can't verify all possibility. 
+            Probably this can be done with a script able to change the SV parameters and then simulate the core in each configuration, anyway this can be considered as a future work. 
+            
+            
+            Knowing this issue we decide some configuration useful to show the ability of the new architecture and we verify only these, the analysis is done in the Results section \ref{Results}. 
+            
+        }
+        
+        \subsection{Fault Injection Process}{
+            The fault injection process is managed by the vsim\_stage\_compare.tcl script that we already mentioned before. 
+            These are the main steps that the script follows:
+            \begin{itemize}
+                \item \textbf{Save Variable:} comp\_sim sets many variable according to options and arguments used, these environmental variables are set using export bash command and saved in tcl variables inside the stage\_compare script.
+                \item \textbf{Set signals for FI:} Inside stage\_compare there is a list called sim\_fi\_sig that should contain the name of signals in which inject faults. To create this variable we use "find nets" command with regular expression to select signals inside the if\_stage adapt to fault injection. We can decide to inject faults only in sequential parts or also in combinatorial parts, we also can decide to exclude reset and clock signals because they are usually protected at layout level.
+                \item \textbf{Fault distribution:} We should apply a uniform distribution of faults on all bits in order to simulate real behaviour of particle strike, so we copy each signal N times  as the number of the bits of that signal, in this way when we use random selection we have a uniform distribution along all bits, e.g., if we have the signals sig1 with 4 bits and sig2 with 2 bits the final sim\_fi\_sig list will be [sig1 sig1 sig1 sig1 sig2 sig2]. 
+                \item \textbf{Manage previous simulations:} Sometimes we happened to stop a simulation before the end, for these cases we create a recovery part that automatically load old interrupted simulation. This load needs to avoid the repetition of fault injection on the same signals at the same time.
+                \item \textbf{FI of stage:} Suppose to run \breakline "-sfiupi atfcsb ref ft 1 100 hello\_world if\_stage" the new option here are: "f" which set or not fault injection (1 -> FI, 0 ->not FI) and "c" which refers to the number of simulation to do, in this case 100.
+                When we run this command,  comp\_sim run the Makefile in sim\_FT directory which set the correct vcd as input stimulus and in turn run the stage\_compare script inside QuestaSim. 
+                Stage\_compare looks at the env variables "FI" and "CYCLE" to know whether inject faults and how many simulation it has to do.
+                Then are set signals in which inject faults, are checked previous simulation and finally the fault injection on the stage begins.\\
+                
+                
+                In this part the first operation is to load the reference simulation or the wlf file saved previously, then is created the clock because vcdstim don't set it, finally is selected a random simulation time fi\_instant and a random signal sig\_fi, inside the selected signal is extracted a bit bit\_number. The triplet fi\_instant, sig\_fi and bit\_number creates a unique simulation id which is saved inside the signals\_fault\_injections files in the sim\_FT/sim\_out directory.
+                Now the simulation starts and continue up to fi\_instant, here the selected bit\_number of the sig\_fi signal is flipped and the output comparison begins. 
+                
+                This cycle corresponds to one Fault Injection Simulation and it is repeated CYCLE times as we set in comp\_sim command.\\
+                
+                As we already mentioned the fault is injected flipping the bit, anyway this could be done both using "force -deposit" command or the "force -freeze" command, the first create a transient error that can be overwritten, the second instead flip the bit permanently up to the end of simulation.
+                
+                We observe that usually the faults lead to an error in few clock cycle, so we simulate some clock cycle and compare the signals, if there are errors we stop, otherwise we continue simulating a tenth of the remaining time and so on. This methods decrease significantly the simulation time.
+                At the end of each simulation we write the simulation results on the signals\_fault\_injections file.
+            \end{itemize}
+            
+            Using this methods the Fault injection is fast and efficient, it also inject fault uniformly in bits and time.
+        }
+        \subsection{Number of simulations and Accuracy}{
+            A single FI simulation can needs from three seconds up to thirty seconds related to the workload of the software used, for this reason the choice of the number of simulations is important to reach good accuracy with the lowest simulation time.
+            In order to achieve the best trade-off we use the Statistical Fault Injection (SFI) technique expressed in the formula \bscite{Leveugle2009}:
+            \begin{equation}
+                n_{trade-off} = \dfrac{N_{max}}{1 - e^2 \frac{N_{max}-1}{t^2 \cdot p \cdot (1-p)}}
+            \end{equation}    
+            In this formula we have these parameters:
+            \begin{itemize}
+                \item \textbf{$N_{max}$:} Max number of injectables faults, it is equal to the total number of injectables bits multiplied by the simulation clock cycle number.
+                \item \textbf{e:} It is the margin error of the final probability obtained during the simulations, this parameter have strong impact on $n_{trade-off}$, the more "e" decrease, the more $n_{trade-off}$ increase, a typical value for e is 0.05. In this way at the end of the FI process we will have a FT\% between FT\%-5\% and FT\%+5\%.
+                \item \textbf{t:} It is the cut-off point from which depends the confidence level, for t equal to 1.96 , 2.57 and 3.09 we have confidence level of 90\%, 95\% and 99\%.
+                \item \textbf{p:} It is the estimated probability of fault, even if it is unknown we decide to use the p value that maximize the product $p\cdot(1-p)$ in order to have maximum n\_{trade-off}, this value is 0.5.
+                \item \textbf{$n_{trade-off}$:} It is the estimated number of simulation in order to have a certain statistical confidence level of the final fault tolerance level, according to the previous parameters.
+            \end{itemize}
+            
+            Since $N_{max}$ depends on the simulation clock cycle, each software will have the corresponding $n_{trade-off}$. 
+            In order to evaluate this number of simulation we create the tcl script vsim\_cycle\_to\_certain\_coverage.tcl which can be executed with the command \breakline "-b asvb ref hello\_world cov if\_stage" where cov is a script abbreviation for cycle\_to\_certain\_coverage. Inside cycle\_to\_certain\_coverage you can set the signals you what to use in fault injection, the error margin and the cut off point obtaining the number of simulations you should run.\\
+        
+        }
+        
+        In this section we have described the software architecture we create over the core-v-verif repository in order to do functional and FI simulation in automatic way. In the next section we describe the main results we reach for our stage using the techniques explained above. 
+    }
+    
+    \newpage    
+    \section{Results}{
+    \label{Results}
+        Initially we should analyze the fault tolerance level of the original architecture in order to have a comparison metrics for the FT arch. In table \ref{Tab:Result1} there are all benchmark software with the relative FT percentage:
+        \begin{center}
+            \begin{tabular}{l|c|c|c}%
+                \bfseries Software & \bfseries FT Level [\%] & \bfseries N sim & \bfseries N err % specify table head
+                \csvreader[Results of FT Level for each software with]{Table/result_each_software_basic.csv }{}% use head of csv as column names
+                {\\\hline\csvcoli&\csvcolii&\csvcoliii&\csvcoliv}% specify your coloumns here
+            \end{tabular}
+            \captionof{table}{Results of FT Level for each software for the reference IF stage architecture, transient errors, confidence level of 99\% and error of 4\%   \label{Tab:Result1}}
+        \end{center}
+        
+        The global FT level is \textbf{87\%}. The fault injection is done both on sequential and combinatorial signals, in this way we have a good approximation of real FT level. 
+        Now we are ready to test the new architecture in two different configuration.
+        
+        \paragraph{Full FT configuration}{
+                The first architecture we verify is full FT so each sub-block has: FT variable set to 1, we don't use triple voter so all TOUT are 0 and also all TIN are 0, for permanent fault configuration we use increment and decrement equal to 1 and the Breaking Threshold equal to 3 anyway this part isn't tested.
+                The configuration setted can be considered a fine-grain TMR plus permanent error detection through alpha counter architecture. The results of trasient Fault Injection is shown in Table \ref{Results2}
+                \begin{center}
+                    \begin{tabular}{l|c|c|c}%
+                        \bfseries Software & \bfseries FT Level [\%] & \bfseries N sim & \bfseries N err % specify table head
+                        \csvreader[Results of FT Level for each software with only Prefetch Buffer protected]{Table/result_each_software_all.csv }{}% use head of csv as column names
+                        {\\\hline\csvcoli&\csvcolii&\csvcoliii&\csvcoliv}% specify your coloumns here
+                    \end{tabular}
+                    \captionof{table}{Results of FT Level for each software with all blocks protected in the new architecture, transient fault, confidence level of 99\% and error of 5\%  \label{Results2}}
+                \end{center}
+                The global fault tolerance of the stage compleatly protected is \textbf{99.2\%}, it isn't 100\% because we inject fault also in the signals which connect blocks each other. The errors introduced by these signals can be eliminated using triple voter configuration.
+                Anyway this solution isn't effective because there is a complete triplication of each sub blocks which can be optimized using TMR on the overall stage, the TMR on the complete IF stage reduces the number of voters and avoid the sub blocks interconnection problem. We test this solution to have the maximum FT level reachable with our architecture, anyway in real application will be used trade-off configuration like the one shown in the next paragraph.
+            }
+            
+            \paragraph{FT trade-off configuration}{
+                We want to set a configuration in which the lower number of TMR sub-block reach a considerable Fault Level, to do this the first step is to understand what is the critical part of the whole stage. 
+                For this reason we use the reference architecture results, in Table \ref{Result3} there is the result of this simulation grouped in blocks.
+                \begin{center}
+                    \begin{tabular}{l|c|c|c}%
+                        \bfseries subblocks & \bfseries N err & \bfseries N sim & \bfseries FT level [\%] % specify table head
+                        \csvreader[Results of FT Level for each software with only Prefetch Buffer protected]{Table/result_each_blocks_ref.csv }{}% use head of csv as column names
+                        {\\\hline\csvcoli&\csvcolii&\csvcoliii&\csvcoliv}% specify your coloumns here
+                    \end{tabular}
+                    \captionof{table}{Results of FT Level for the two main blocks of the reference IF stage
+                        \label{Result3}
+                    }
+                \end{center}
+                As you can see the prefetch\_buffer is the block with the higher number of errors and so the most impactful in terms of Fault Tolerant . We should look at the total number of errors since the FT level of each block doesn't consider the number of bits. Looking at the total number of error we automatically consider the number of bits and so the probability that a particle reaches the block. These statements are true because we inject faults using uniform distribution along signals and bits and so a higher number of error in a stage means a higher contribution to FT level.
+                
+                We also exclude the other 4 blocks because they are little and so have lower impact on FT level.\\
+                
+                Starting from these considerations we protect only the prefetch buffer, the protection of this block is easy to perform since we should only set PRBU\_FT = 1 in the cv32e40p\_pkg2.sv package.
+                After this configuration we run fault injection and we find the results in table \ref{Results4}.
+                
+                \begin{center}
+                    \begin{tabular}{l|c|c|c}%
+                        \bfseries Software & \bfseries FT Level [\%] & \bfseries N sim & \bfseries N err % specify table head
+                        \csvreader[Results of FT Level for each software with only Prefetch Buffer protected]{Table/result_each_software_only_prefetch.csv }{}% use head of csv as column names
+                        {\\\hline\csvcoli&\csvcolii&\csvcoliii&\csvcoliv}% specify your coloumns here
+                    \end{tabular}
+                    \captionof{table}{Results of FT Level for each software with only Prefetch Buffer protected in the new architecture
+                    ,transient fault, confidence level of 99\% and error of 5\%
+                        \label{Results4}
+                    }
+                \end{center}
+                
+                The global FT level is \textbf{96\%}, this is a good number if we want increase the FT level with very low overhead in area. This result is near to the FT level of the full FT configuration and for this reason is is a good trade off.
+            }
+    
+    }% end Results
+}

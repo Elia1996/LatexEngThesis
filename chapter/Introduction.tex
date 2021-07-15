@@ -1,21 +1,50 @@
 \chapter{Introduction}{
 	\label{chap:Intro}
-	%\lipsum[1-4]
-	\section{General context}
-	\label{sec:GeneralContext}
 	% Fault tolerant increase in VLSI
 	% Space and critical appilication
 	% Increasing use of RISCV core
 	%\lipsum[1-4]
-	\section{Objectives}
-	\label{sec:Objectives}
-	% Create a FT arch of RISCV core
-	% Verify fault tolerant
-	%\lipsum[1-4]
-	\section{Thesis structure}
-	\label{sec:ThesisStructure} 
-	% chpter organization
-	%\lipsum[1-4]
+	Electronic is pervasive in our life; each year are sold about 1530 million of smartphones \bscite{smartphone_statistica}, 75 million of computers \bscite{pc_statistica} and  65 million of cars \bscite{car_statistica}.
+	Nowadays smartphone users reach 5.22 billion which represent the 66\% of worldwide population \bscite{tot_smartphone_statistica}, about two out of ten people own a car \bscite{car_number_statistica} and there are 5774 orbiting satellites \bscite{satelliti_statistica}.\\
+	
+	These are only few data which show how many electronic devices are used today worldwide. If you think that each of those devices contains one or many CPUs you have only partially achieved the number of worldwide CPU used nowadays.\\
+	
+	Processors are also used in industrial, networking and data processing fields. In each application a system can have different requirements that should be applied also to CPU used. The most restrictive is the \textit{Safety-Critical Application} field, in this system the designers should complain different levels of reliability. Examples of Safety-Critical Application are the Automotive, Space Mission field and Medical devices which are three type of systems strongly embedded in our everyday life ( e.g., the Cars, the GPS, pacemakers \bscite{Pacemaker_reliability_design_to_explant}).\\
+	
+	For these reasons the study and development of more reliable and secure CPUs are really important for VLSI industries. An improvement to CPUs development come from RISC-V Instruction Set Architecture, nowadays this ISA is increasingly used by industries because it enables a frozen interface between hardware and software stack. Indeed, RISC-V ISA provides four base ISA versions described without implementation details. Starting with these versions, as a foundation, the designers can add many standard or custom extensions. Accelerators and co-processors can be also added in order to create complex and high-performance CPUs.\\
+	
+	\section{Objectives}{
+        \label{sec:Objectives}
+        % Create a FT arch of RISCV core
+        % Verify fault tolerant
+        %\lipsum[1-4]
+        This Master thesis lies on a larger project aimed to create a fault tolerant RISC-V processor for pulpissimo processor starting from CV32E40P core. In order to achieve this result the first step is the creation of a Fault Tolerant CV32E40P, for these reasons the core has been divided between me and my two teammates in this way:
+        \begin{itemize}
+            \item \textbf{Instruction Fetch (IF):} Elia Ribaldone;
+            \item \textbf{Instruction Decode (ID):} Marcello Neri \bscite{tesi_marcello};
+            \item \textbf{Execution Stage (EX):} Luca Fiore \bscite{tesi_luca};
+        \end{itemize}
+        In each thesis the reference stage has been converted in a Fault Tolerant one. \\
+        
+        The objective of this thesis is the creation of a Fault Tolerant (FT) Instruction Fetch for CV32E40P core. In particular the automatization of FT transformation has been investigated and a metalanguage has been created to speed up this operation.
+        
+        Indeed, nowadays an HDL able to automatically apply a transformation to an existing architecture don't exist. Such language can dramatically decrease the time to market and the maintaining efforts of a fault tolerant architecture because FT cores are usually created starting from a previous design. Even if the final result can be completely different from the original design, many pieces of the starting architecture are used and modified applying a template. A typical example is the TMR which consists in triplication and voting of a working not FT architecture, these techniques correspond to an architectural template that can be applied to many designs, anyway at today each time we should apply this technique we should manually create redundancy and connect voters in a HDL language such as System Verilog. These is the motivation that has pushed this work to a metalanguage direction.
+    
+	}
+	\section{Thesis structure}{
+        \label{sec:ThesisStructure} 
+        % chpter organization
+        %\lipsum[1-4]
+	    The Thesis structure is divided into seven chapters:
+	    \begin{itemize}
+	        \item \textbf{Chapter 2 - Technical Background:} This chapter explains the IEC61508 standard, the fault tolerance vocabulary and metrics, the cause of bit flip in VLSI circuits and the hardening techniques to increase reliability.
+	        \item \textbf{Chapter 3 - RISC-V and CV32E40P core:} Here the history, motivations and the structure of RISC-V ISA are explained, then the Instruction Fetch of the CV32E40P is studied in order to apply the FT techniques in the next chapter.
+	        \item \textbf{Chapter 4 - Fault Tolerant Compressed Decoder:} In this Chapter a FT Compressed decoder for CV32E40P core is designed and verified, the new stage is protected to transient faults and can detect permanent faults. 
+	        \item \textbf{Chapter 5 - Travulog and HTravulog:} Starting from the FT Compressed Decoder (CD), a Travulog template and a toolchain, able to transform the original CD in the FT CD have been developed. In this chapter there is also a description about Travulog/HTravulog metalanguage that is used to transform each block inside the Instruction Fetch in a FT block.
+	        \item \textbf{Chapter 6 - Results:} In this chapter the complete FT IF stage, created using Travulog metalanguage, are presented and the results of simulations are reported.
+	        \item \textbf{Chapter 7 - Future Works:} In this chapter some improvement to FT architecture and Travulog are proposed.
+	    \end{itemize}
+	}
 }
 
 

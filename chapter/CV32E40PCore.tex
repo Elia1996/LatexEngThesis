@@ -8,7 +8,7 @@
 	The focus is on modular approach and extensibility in order to increase field of use of the ISA.
     
     For these reasons the use of a free and open ISA worldwide unlock partially software from hardware implementation since the interface is always about equal.
-    This subdivision speed up computer CPU progress with lower efforts in software support.
+    This subdivision speed up computer CPU progress with lower efforts in software stack support.
     Indeed companies efforts can be focused more on design and less on software support since the interface is the same.\\
     
     RISC-V is maintained by the RISC-V foundation born in 2015, it is driven by open collaboration in order to improve RISC-V ISA.
@@ -23,18 +23,18 @@
     Starting from these ideas we could summarized some benefits of a open and free ISA \bscite{Asanovic2014} :
     \begin{itemize}
         \item \textbf{Greater Innovation:} More people working on the same ISA speed up innovation;
-        \item \textbf{Shared Open Core Design:} with a free ISA the implementation (e.g. System Verilog design) can be shared as open source, this prevent malicious traps doors and increase transparency, it also allows the born of new industries that create products from open design;
+        \item \textbf{Shared Open Core Design:} with a free ISA the implementation (e.g., System Verilog design) can be shared as open source, this prevent malicious traps doors and increase transparency, it also allows the born of new industries that create products from open design;
         \item \textbf{Cheaper Processors:} the reduction of company work on software stack decrease the processors cost, this speed up widespread of IoT;
         \item \textbf{Longevity of Software Stack:} a standard ISA allow the creation of an endurance Software Stack since it don't depends to a company;
         \item \textbf{Architecture Education and Research closer to real application: } the academic world could work on open hardware and software.
     \end{itemize}
     
     At 2020 the 23\% of ASICs and FPGAs project incorporate at least one RISC-V core and it is foreseen that in 2025 will be used 62.4 Billion of RISC-V Cores respect to 10 Billion of 2020.
-    This is surely a positive sign of open ISA strategy, it means that many industries are rely on RISC-V ISA architecture and they use it to speed up their internal design.
+    This is surely a positive sign for open ISA strategy, it means that many industries are rely on RISC-V ISA architecture and they use it to speed up their internal design.
     
 	
 	\section{History}{
-	    ISA of RISC-V started in 2010 in a project for the Parallel Computing Laboratory (Par Lab) at Berkeley held by Prof. Krste Asanović and graduate students Yunsup Lee and Andrew Waterman.
+	    RISC-V ISA design started in 2010 in a project for the Parallel Computing Laboratory (Par Lab) at Berkeley held by Prof. Krste Asanović and graduate students Yunsup Lee and Andrew Waterman.
 	    The idea of RISC-V ISA born to create a complete open hardware ecosystem, indeed until that moment the main ISA was proprietary and academic world work on non realistic architecture.
 	    Anyway the outcome of an open ISA also help industries since the main costs an complexity in the creation of a new chip is the development of software stack for new ISAs.
 	    Indeed any change to the ISA means redevelop some parts of software with high costs.
@@ -54,7 +54,7 @@
 	\section{RISC-V ISA}{
 	    RISC-V ISA is described in two document:
 	    \begin{itemize}
-	        \item \textbf{riscv-privileged:} Or Kernel mode, in this document are described privileged  instructions any attempt to execute this instruction from User Mode will not be executed and it is considered illegal instructions. These are the instructions used in the Operative System to perform operations.
+	        \item \textbf{riscv-privileged:} Or Kernel mode, in this document are described privileged  instructions, any attempt to execute this instruction from User Mode will not be executed and it is considered illegal instructions. These are the instructions used in the Operative System to perform operations.
 	        \item \textbf{riscv-unprivileged:} Or Non privileged mode, it is made by all instructions that can be run only in user mode.
 	    \end{itemize}
 	    
@@ -63,8 +63,8 @@
 	    \begin{itemize}
 	        \item \textbf{core:} An architecture is defined a core if it contains an instruction fetch; 
 	        \item \textbf{harts:} Are hardware threads that can be support by the ISA, a RISC-V compatible core can supports multiple harts;
-	        \item \textbf{coprocessor:} It is an instruction set extension used by the RISC-V compatible core, this coprocessor is considered as a separate unit that is controlled by a RISC-V instruction flux but it have relative autonomy respect to primary RISC-V core, this is an example of RISC-V coprocessor programming for sensor reading \href{https://github.com/espressif/esp-idf/blob/c13afea635adec735435961270d0894ff46eef85/docs/en/api-guides/ulp-risc-v.rst}{RISC-V sensors};
-	        \item \textbf{accelerator:} This component are really useful to perform specialized complex task, e.g. I/O and AI accelerator, the first manage I/O processing task while the second could be a voice recognition AI.
+	        \item \textbf{coprocessor:} It is an instruction set extension used by the RISC-V compatible core, this coprocessor is considered as a separate unit that is controlled by a RISC-V instruction flux, but it have relative autonomy respect to primary RISC-V core, this is an example of RISC-V coprocessor programming for sensor reading \href{https://github.com/espressif/esp-idf/blob/c13afea635adec735435961270d0894ff46eef85/docs/en/api-guides/ulp-risc-v.rst}{RISC-V sensors};
+	        \item \textbf{accelerator:} This component are really useful to perform specialized complex task, e.g., I/O and AI accelerator, the first manage I/O processing task while the second could be a voice recognition AI.
 	    \end{itemize}
 	    As you can see RISC-V can have extensions and coprocessors, it can also have many system-level organizations; single-core, many-core shared memory and so on.
 	    
@@ -73,7 +73,7 @@
 	    The base integer ISA is enough to support a compilers, assemblers, linkers, and operating system, in this way it provide a starting point to custom implementations.\\
 	    
 	    The RISC-V ISA is divided in four base ISA family and it is "designed to support extensive customization and specialization" \bscite{RISCV_unprivileged}, each family is distinguished by a different register width and the number of corresponding address space. 
-	    The four family are RV32I, RV32E (with 32 bits) RV64I (64 bits) and RV128I (128 bits), naturally 128 bits is a huge number of address, anyway RISC-V standard want to be prepared for future huge computer address. These four ISA are considered four base ISA, in this way e.g RV64I shouldn't be compliant with RV32I and so have separate implementation.\\
+	    The four family are RV32I, RV32E (with 32 bits) RV64I (64 bits) and RV128I (128 bits), naturally 128 bits is a huge number of address, anyway RISC-V standard want to be prepared for future huge computer address. These four ISA are considered four base ISA, in this way e.g., RV64I shouldn't be compliant with RV32I and so have separate implementation.\\
 	     
 	    
 	    In addition to base ISA (marked with I suffix for Integer) there are some standard extension:
@@ -106,7 +106,7 @@
 		    We will discuss the RV32I base version since in this Master Thesis we use the CV32E40P core.
 		    For RV32I  ISA we have 32 unprivileged registers where the first is hardwired to 0 and the others are general purpose, there is also the 32 bit Program Counter register.
 		    
-		    The base instructions used are six R/I/S/B/U/J and are shown in figure \ref{fig:riscv_instruction_format}, all 47 base instruction is encoded using these 6 format.
+		    The base instructions used are six R/I/S/B/U/J and are shown in figure \ref{fig:riscv_instruction_format}, all 47 base instruction is encoded using these 6 formats.
 		    As you can see many parameters have the same place, this enable an easier decode of instructions and so increase low power behaviour of possible implementations.
     	    \begin{figure}[H]
     			\centering
@@ -142,7 +142,7 @@
 		
 	    \begin{figure}[H]
 			\centering
-			\includegraphics[scale=0.35,center]{./images/CV32E40P_core_diagram.png}
+			\includegraphics[scale=0.3,center]{./images/CV32E40P_core_diagram.png}
 			\caption{CV32E40P core diagram.}
 			\label{fig:cv32e40p_core_diagram}
 		\end{figure}  
@@ -152,19 +152,12 @@
 		
 		\subsection{CV32e40P Instruction Fetch}{
 		    The instruction fetch read the instruction from instruction memory and provide them to the Instruction Decode (ID).
-		    As you can see in figure \ref{} the IF stage can be divided into six main block, anyway only  the Prefetch Buffer, the Compressed Decoder and the Aligner are designed as separate System Verilog file.
+		    As you can see in figure \ref{fig:cv32e40p_block_diagram} the IF stage can be divided into six main block, anyway only  the Prefetch Buffer, the Compressed Decoder and the Aligner are designed as separate System Verilog file.
 		    
-		    \begin{figure}[H]
-        		\centering
-        		\includegraphics[scale=0.4,center]{./images/CV32E40P_core_diagram.png}
-        		\caption{CV32E40P Instruction Fetch block diagram.}
-        		\label{fig:cv32e40p_block_diagram}
-        	\end{figure} 
-        	
         	The six block of the IF stage cover these functions:
         	\begin{itemize}
         	    \item \textbf{Prefetch Buffer (PB):} PB is designed in order to fetch instruction from instruction memory/fetch via the OBI interface (cv32e40p\_obi\_interface.sv file), the instruction are then inserted to a four element FIFO (cv32e40p\_fifo.sv file) and then they are sent to the ID stage. OBI interface and the FIFO is controlled by the Prefetch Controller ( cv32e40p\_prefetch\_controller.sv file). 
-        	    The advantage of the use of prefetch buffer is a higher instruction fetch speed that affects the core performances.
+        	    The advantage of the use of Prefetch Buffer is a higher instruction fetch speed that affects the core performances.
         	   
         	    \item \textbf{Compressed Decoder (CD):} CD check the instruction in order to verify if is compressed, this identification is done using the first two bit of the instruction, when they are both 1 means that the instruction isn't compressed and it is copied to the output, otherwise the instruction is decoded. 
         	    The stage is completely combinatory since it is described as a big case in System Verilog.
@@ -178,6 +171,13 @@
         	    \item \textbf{Program Counter Definition (PCD):} PCD define the PC according to jump, branch, trap and exceptions. It is a System Verilog (SV) block written inside the cv32e40p\_if\_stage.sv file.
                 
         	\end{itemize}
+		    \begin{figure}[H]
+        		\centering
+        		\includegraphics[scale=0.16,center]{./images/block_diagram_if_stage.png}
+        		\caption{CV32E40P Instruction Fetch block diagram.}
+        		\label{fig:cv32e40p_block_diagram}
+        	\end{figure} 
+        	
 		}
 		
 	}% end cv32e40p Core
