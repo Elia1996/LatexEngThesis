@@ -1,1 +1,1 @@
-La mia tesi di Laurea Magistrale
+This is my Master Thesis in Electronic Engineering
